@@ -49,3 +49,4 @@ def load_nodes():
     return node_class_mappings, node_display_name_mappings
 
 NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS = load_nodes()
+WEB_DIRECTORY = "./loopchain.js"
