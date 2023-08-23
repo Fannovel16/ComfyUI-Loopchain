@@ -1,15 +1,6 @@
-/**
- * File: mtb_widgets.js
- * Project: comfy_mtb
- * Author: Mel Massadian
- *
- * Copyright (c) 2023 Mel Massadian
- *
- */
-
 import { app } from '/scripts/app.js'
 import { api } from '/scripts/api.js'
-import * as shared from '/extensions/mtb/comfy_shared.js'
+import * as shared from './comfy_shared.js'
 
 const getNodeByLink = (linkId, type) => app.graph.getNodeById(app.graph.links[linkId][type == "input" ? "origin_id" : "target_id"]);
 function enableOnlyRelatedNodes(targetNode) {
