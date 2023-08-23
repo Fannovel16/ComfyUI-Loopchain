@@ -22,6 +22,8 @@ function enableOnlyRelatedNodes(targetNode) {
         travelBackward(node);
         if (!node.outputs) return;
         for (const output of node.outputs) {
+            if (!output.links) continue
+            
             for (const link of output.links) {
                 travelForward(
                     getNodeByLink(link, "output"),
@@ -44,15 +46,19 @@ const MOD_METHODS = {
             nodeType.prototype.onNodeCreated = function () {
                 const numLoop = this.widgets.find((w) => w.name === 'num_loop');
                 const loopIndex = this.widgets.find((w) => w.name === 'loop_idx');
+                
                 this.afterQueued = function () {
                     loopIndex.value++;
                 }
             }
         },
         whenCreated (node, app) {
-            const runButton = node.addWidget('button', `Queue`, 'queue', () => {
+            node.addWidget('button', `Queue`, 'queue', function() {
+                const numLoop = node.widgets.find((w) => w.name === 'num_loop');
+                const loopIndex = node.widgets.find((w) => w.name === 'loop_idx');
+
                 loopIndex.value = 0;
-                enableOnlyRelatedNodes(nodeData);
+                enableOnlyRelatedNodes(node);
                 app.queuePrompt(0, numLoop.value);
             });
         }
@@ -64,7 +70,9 @@ app.registerExtension({
     async beforeRegisterNodeDef(nodeType, nodeData, app) {
         if (MOD_METHODS[nodeData.name]) MOD_METHODS[nodeData.name].beforeDef(nodeType, nodeData, app)
 	},
+    async addCustomNodeDefs(defs, app) {
+	},
     nodeCreated(node, app) {
-        if (MOD_METHODS[node.type]) MOD_METHODS[node.type].whenCreated(node, app)
+        if (MOD_METHODS[node.comfyClass]) MOD_METHODS[node.comfyClass].whenCreated(node, app)
     }
 })
