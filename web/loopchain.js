@@ -52,6 +52,8 @@ async function modEmptyLatent(self, nodeType, nodeData, app) {
 }
 
 app.registerExtension({
+	name: "loopchain",
+
 	async beforeRegisterNodeDef(nodeType, nodeData, app) {
 		switch (nodeData.name) {
 			case "EmptyLatentImageLoop":
