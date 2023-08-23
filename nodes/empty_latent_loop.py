@@ -18,8 +18,12 @@ class EmptyLatentImageLoop:
     OUTPUT_NAMES = ("LATENT", "INDEX")
     FUNCTION = "generate"
 
-    CATEGORY = "latent"
+    CATEGORY = "Loopchain"
 
     def generate(self, width, height, loop_idx, num_loop, batch_size=1):
         latent = torch.zeros([batch_size, 4, height // 8, width // 8])
         return ({"samples":latent}, loop_idx, )
+
+NODE_CLASS_MAPPINGS = {
+    "EmptyLatentImageLoop": EmptyLatentImageLoop
+}
