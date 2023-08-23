@@ -19,6 +19,7 @@ function enableOnlyRelatedNodes(targetNode) {
 
     function travelForward(node) {
         whitelist[node.id] = node;
+        travelBackward(node);
         if (!node.outputs) return;
         for (const output of node.outputs) {
             for (const link of output.links) {
@@ -30,38 +31,40 @@ function enableOnlyRelatedNodes(targetNode) {
         }
     }
 
-    travelBackward(targetNode), travelForward(targetNode);
+    travelForward(targetNode);
 
     for (const node of app.graph._nodes) {
         if (!whitelist[node.id]) node.mode = 2;
     }
 }
 
-function modEmptyLatent(nodeType, nodeData, app) {
-    nodeType.prototype.onNodeCreated = function () {
-        const numLoop = this.widgets.find((w) => w.name === 'num_loop');
-        const loopIndex = this.widgets.find((w) => w.name === 'loop_idx');
-        const runButton = this.addWidget('button', `Queue`, 'queue', () => {
-            loopIndex.value = 0;
-            enableOnlyRelatedNodes(nodeData);
-            app.queuePrompt(0, numLoop.value);
-        });
-
-        this.afterQueued = function () {
-            loopIndex.value++;
+const MOD_METHODS = {
+    EmptyLatentImageLoop: {
+        beforeDef (nodeType, nodeData, app) {
+            nodeType.prototype.onNodeCreated = function () {
+                const numLoop = this.widgets.find((w) => w.name === 'num_loop');
+                const loopIndex = this.widgets.find((w) => w.name === 'loop_idx');
+                this.afterQueued = function () {
+                    loopIndex.value++;
+                }
+            }
+        },
+        whenCreated (node, app) {
+            const runButton = node.addWidget('button', `Queue`, 'queue', () => {
+                loopIndex.value = 0;
+                enableOnlyRelatedNodes(nodeData);
+                app.queuePrompt(0, numLoop.value);
+            });
         }
     }
-
 }
 
 app.registerExtension({
     name: "loopchain",
-
     async beforeRegisterNodeDef(nodeType, nodeData, app) {
-        const modFunctions = {
-            EmptyLatentImageLoop: modEmptyLatent
-        };
-        const modFunction = modFunctions[nodeData.name];
-        if (modFunction) modFunction(nodeType, nodeData, app);
-	}
+        if (MOD_METHODS[nodeData.name]) MOD_METHODS[nodeData.name].beforeDef(nodeType, nodeData, app)
+	},
+    nodeCreated(node, app) {
+        if (MOD_METHODS[node.type]) MOD_METHODS[node.type].whenCreated(node, app)
+    }
 })
