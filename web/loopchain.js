@@ -37,18 +37,21 @@ function enableOnlyRelatedNodes(targetNode) {
 	}
 }
 
-async function modEmptyLatent(self, nodeType, nodeData, app) {
-	const numLoop = self.widgets.find((w) => w.name === 'num_loop');
-	const loopIndex = self.widgets.find((w) => w.name === 'loop_idx');
-	const runButton = self.addWidget('button', `Queue`, 'queue', () => {
-		loopIndex.value = 0;
-		enableOnlyRelatedNodes(nodeData);
-		app.queuePrompt(0, numLoop.value);
-	});
-
-	self.afterQueued = function () {
-		loopIndex.value++;
+function modEmptyLatent(nodeType, nodeData, app) {
+	nodeType.prototype.onNodeCreated = function () {
+		const numLoop = this.widgets.find((w) => w.name === 'num_loop');
+		const loopIndex = this.widgets.find((w) => w.name === 'loop_idx');
+		const runButton = this.addWidget('button', `Queue`, 'queue', () => {
+			loopIndex.value = 0;
+			enableOnlyRelatedNodes(nodeData);
+			app.queuePrompt(0, numLoop.value);
+		});
+	
+		this.afterQueued = function () {
+			loopIndex.value++;
+		}
 	}
+	
 }
 
 app.registerExtension({
@@ -57,7 +60,7 @@ app.registerExtension({
 	async beforeRegisterNodeDef(nodeType, nodeData, app) {
 		switch (nodeData.name) {
 			case "EmptyLatentImageLoop":
-				modEmptyLatent(this, nodeType, nodeData, app);
+				modEmptyLatent(nodeType, nodeData, app);
 				break;
 			default:
 				break;
