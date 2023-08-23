@@ -13,12 +13,12 @@ def load_nodes():
     node_class_mappings = {}
     node_display_name_mappings = {}
 
-    for filename in (here / "node_wrappers").iterdir():
+    for filename in (here / "nodes").iterdir():
         
         module_name = filename.stem
         try:
             module = importlib.import_module(
-                f".node_wrappers.{module_name}", package=__package__
+                f".nodes.{module_name}", package=__package__
             )
             node_class_mappings.update(getattr(module, "NODE_CLASS_MAPPINGS"))
             if hasattr(module, "NODE_DISPLAY_NAME_MAPPINGS"):

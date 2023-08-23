@@ -56,7 +56,7 @@ async function modEmptyLatent(self, nodeType, nodeData, app) {
 	});
 
 	self.afterQueued = function () {
-		loopIndex.value++	
+		loopIndex.value++;
 	}
 }
 
