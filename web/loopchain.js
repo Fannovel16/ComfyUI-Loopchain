@@ -138,19 +138,23 @@ const MOD_METHODS = {
             node.addWidget('button', `Queue`, 'queue', function () {
                 const numLoop = findWidgetByName(node, 'num_loop');
                 const loopIndex = findWidgetByName(node, 'loop_idx');
+                
                 shared.hideWidgetForGood(node, loopIndex);
                 loopIndex.value = 0;
-                
                 loopIndex.afterQueued = function () {
                     if (node.mode === 2) return
+
+                    const loopPreview = findWidgetByName(node, 'loop_preview');
                     loopPreview.value = this.value == numLoop.value - 1
                         ? 'Done 😎!'
                         : `current loop: ${this.value + 1}/${numLoop.value}`;
                     this.value++;
                 }
 
-                enableOnlyRelatedNodes(node);
-                app.queuePrompt(0, numLoop.value);
+                const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
+                app.queuePrompt(0, numLoop.value)
+                    .then(_ => notAlreadyMutedBlacklist.forEach(node => node.mode = 0));
+                
             });
         }
     },
@@ -185,6 +189,8 @@ const MOD_METHODS = {
 
             loopIndex.afterQueued = function () {
                 if (node.mode === 2) return
+                const loopPreview = findWidgetByName(node, 'loop_preview');
+
                 loopPreview.value = this.value == numLoop.value - 1
                     ? 'Done 😎!'
                     : `current loop: ${this.value + 1}/${numLoop.value}`;
@@ -209,26 +215,35 @@ const MOD_METHODS = {
                         numLoop.value = result;
                         const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
                         await app.queuePrompt(0, numLoop.value);
-                        for (const node of notAlreadyMutedBlacklist) {
-                            node.mode = 0;
-                        }
+                        for (const node of notAlreadyMutedBlacklist) node.mode = 0;
                     });
             });
         }
     },
     ImageStorageReset: {
         whenCreated(node, app) {
-            node.addWidget('button', `Reset`, 'reset', function () {
-                enableOnlyRelatedNodes(node);
-                app.queuePrompt(0);
+            node.addWidget('button', `Queue`, 'queue', function () {
+                const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
+                app.queuePrompt(0)
+                    .then(_ => notAlreadyMutedBlacklist.forEach(node => node.mode = 0));
             });
         }
     },
     LatentStorageReset: {
         whenCreated(node, app) {
-            node.addWidget('button', `Reset`, 'reset', function () {
-                enableOnlyRelatedNodes(node);
-                app.queuePrompt(0);
+            node.addWidget('button', `Queue`, 'queue', function () {
+                const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
+                app.queuePrompt(0)
+                    .then(_ => notAlreadyMutedBlacklist.forEach(node => node.mode = 0));
+            });
+        }
+    },
+    FolderToImageStorage: {
+        whenCreated(node, app) {
+            node.addWidget('button', `Queue`, 'queue', function () {
+                const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
+                app.queuePrompt(0)
+                    .then(_ => notAlreadyMutedBlacklist.forEach(node => node.mode = 0));
             });
         }
     }
