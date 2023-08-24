@@ -13,7 +13,7 @@ First, make a folder named `heads` inside of `ComfyUI/inputs` then put these two
 
 Then load [this workflow](./full_loopchain.json).
 
-![](./demo.mp4)
+https://github.com/Fannovel16/ComfyUI-Loopchain/raw/main/demo.mp4
 
 # Nodes
 * EmptyLatentImageLoop
