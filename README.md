@@ -7,7 +7,9 @@ A loopchain in this case is the chain of nodes only executed repeatly in the wor
 # Example
 TODO: Detailed explaination.
 
-First, make a folder named `heads` inside of `ComfyUI/inputs` then put these two images into it.
+First, install https://github.com/Fannovel16/ComfyUI-Frame-Interpolation.
+
+Second, make a folder named `heads` inside of `ComfyUI/inputs` then put these two images into it.
 ![](./head0.png)
 ![](./head1.png)
 
