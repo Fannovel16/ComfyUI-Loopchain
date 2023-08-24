@@ -124,7 +124,6 @@ const MOD_METHODS = {
     EmptyLatentImageLoop: {
         beforeDef(nodeType, nodeData, app) {
             nodeType.prototype.onNodeCreated = function () {
-                const numLoop = findWidgetByName(this, 'num_loop');
                 const loopIndex = findWidgetByName(this, 'loop_idx');
                 loopIndex.afterQueued = function () {
                     this.value++;
@@ -132,13 +131,7 @@ const MOD_METHODS = {
                 const loopPreview = this.addCustomWidget(
                     DEBUG_STRING('loop_preview', 'Iteration: Idle')
                 );
-                loopPreview.parent = this
-                loopIndex.afterQueued = function () {
-                    loopPreview.value = this.value == numLoop.value - 1
-                        ? 'Done 😎!'
-                        : `current loop: ${this.value + 1}/${numLoop.value}`;
-                    this.value++;
-                }
+                loopPreview.parent = this;
             }
         },
         whenCreated(node, app) {
@@ -147,6 +140,15 @@ const MOD_METHODS = {
                 const loopIndex = findWidgetByName(node, 'loop_idx');
                 shared.hideWidgetForGood(node, loopIndex);
                 loopIndex.value = 0;
+                
+                loopIndex.afterQueued = function () {
+                    if (node.mode === 2) return
+                    loopPreview.value = this.value == numLoop.value - 1
+                        ? 'Done 😎!'
+                        : `current loop: ${this.value + 1}/${numLoop.value}`;
+                    this.value++;
+                }
+
                 enableOnlyRelatedNodes(node);
                 app.queuePrompt(0, numLoop.value);
             });
@@ -161,13 +163,7 @@ const MOD_METHODS = {
                 const loopPreview = this.addCustomWidget(
                     DEBUG_STRING('loop_preview', 'Iteration: Idle')
                 );
-                loopPreview.parent = this
-                loopIndex.afterQueued = function () {
-                    loopPreview.value = this.value == numLoop.value - 1
-                        ? 'Done 😎!'
-                        : `current loop: ${this.value + 1}/${numLoop.value}`;
-                    this.value++;
-                }
+                loopPreview.parent = this;
 
                 this.onRemoved = () => {
                     for (const w of this.widgets) {
@@ -186,7 +182,14 @@ const MOD_METHODS = {
             const loopIndex = findWidgetByName(node, 'loop_idx');
             shared.hideWidgetForGood(node, loopIndex);
             loopIndex.value = 0;
-            const loopPreview = findWidgetByName(node, 'loop_preview');
+
+            loopIndex.afterQueued = function () {
+                if (node.mode === 2) return
+                loopPreview.value = this.value == numLoop.value - 1
+                    ? 'Done 😎!'
+                    : `current loop: ${this.value + 1}/${numLoop.value}`;
+                this.value++;
+            }
 
             node.addWidget('button', `Queue`, 'queue', function () {
                 //LiteGraph dunno async function lol
@@ -199,6 +202,7 @@ const MOD_METHODS = {
                     .then(re => re.json())
                     .then(async ({ result }) => {
                         if (result == -1) {
+                            const loopPreview = findWidgetByName(node, 'loop_preview');
                             loopPreview.value = `${key} not found 🤔.`;
                             return;
                         }
@@ -211,15 +215,31 @@ const MOD_METHODS = {
                     });
             });
         }
+    },
+    ImageStorageReset: {
+        whenCreated(node, app) {
+            node.addWidget('button', `Reset`, 'reset', function () {
+                enableOnlyRelatedNodes(node);
+                app.queuePrompt(0);
+            });
+        }
+    },
+    LatentStorageReset: {
+        whenCreated(node, app) {
+            node.addWidget('button', `Reset`, 'reset', function () {
+                enableOnlyRelatedNodes(node);
+                app.queuePrompt(0);
+            });
+        }
     }
 }
 
 app.registerExtension({
     name: "loopchain",
     async beforeRegisterNodeDef(nodeType, nodeData, app) {
-        if (MOD_METHODS[nodeData.name]) MOD_METHODS[nodeData.name].beforeDef(nodeType, nodeData, app)
+        MOD_METHODS[nodeData.name]?.beforeDef?.(nodeType, nodeData, app)
     },
     nodeCreated(node, app) {
-        if (MOD_METHODS[node.comfyClass]) MOD_METHODS[node.comfyClass].whenCreated(node, app)
+        MOD_METHODS[node.comfyClass]?.whenCreated?.(node, app)
     }
 })

@@ -81,7 +81,10 @@ class ImageStorageReset:
     @classmethod
     def INPUT_TYPES(s):
         return {
-            "required": { "key_list": ("STRING", {"multiline": True}) } 
+            "required": { "key_list": ("STRING", {"multiline": True}) },
+            "optional": {
+                "pipeline": ("LOOPCHAIN_PIPELINE", )
+            }
         }
 
     CATEGORY = "Loopchain/storage"
@@ -175,7 +178,10 @@ class LatentStorageReset:
     @classmethod
     def INPUT_TYPES(s):
         return {
-            "required": { "key_list": ("STRING", {"multiline": True}) } 
+            "required": { "key_list": ("STRING", {"multiline": True}) },
+            "optional": {
+                "pipeline": ("LOOPCHAIN_PIPELINE", )
+            }
         }
 
     CATEGORY = "Loopchain/storage"
