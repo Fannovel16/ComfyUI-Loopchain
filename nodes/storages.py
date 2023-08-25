@@ -9,6 +9,7 @@ import numpy as np
 import folder_paths
 from torch.utils.data import DataLoader
 import os
+from time import sleep
 
 GLOBAL_IMAGE_STORAGE = {}
 GLOBAL_LATENT_STORAGE = {}
@@ -29,6 +30,7 @@ class ImageStorageImport:
         if key not in GLOBAL_IMAGE_STORAGE:
             GLOBAL_IMAGE_STORAGE[key] = []
         GLOBAL_IMAGE_STORAGE[key].append(image)
+        sleep(0.5)
         return {}
     
     @classmethod
@@ -85,6 +87,7 @@ class ImageStorageReset:
         for key in keys:
             if key in GLOBAL_IMAGE_STORAGE:
                 del GLOBAL_IMAGE_STORAGE[key.strip()]
+        sleep(0.5)
         return {}
 
     @classmethod
@@ -168,6 +171,7 @@ class LatentStorageImport:
         if key not in GLOBAL_LATENT_STORAGE:
             GLOBAL_LATENT_STORAGE[key] = []
         GLOBAL_LATENT_STORAGE[key].append(latent)
+        sleep(0.5)
         return {}
     
     @classmethod
@@ -225,6 +229,7 @@ class LatentStorageReset:
         for key in keys:
             if key in GLOBAL_LATENT_STORAGE:
                 del GLOBAL_LATENT_STORAGE[key.strip()]
+        sleep(0.5)
         return {}
 
     @classmethod
