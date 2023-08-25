@@ -106,7 +106,7 @@ class FolderToImageStorage:
                 "folder": (sorted(folders), )
             },
             "optional": {
-                "pipeline": ("LOOPCHAIN-PIPELINE", )
+                "pipeline": ("LOOPCHAIN_PIPELINE", )
             }
         }
 
