@@ -30,7 +30,8 @@ export const ImageStorageExportLoop = {
                 const key = findWidgetByName(node, "key");
                 const batchSize = findWidgetByName(node, "batch_size");
                 const loopPreview = findWidgetByName(node, 'loop_preview');
-
+                loopPreview.value = 'Iteration: Idle';
+                app.canvas.setDirty(true);
 
                 const { result: numLoop } = await fetch(`/loopchain/dataloader_length?type=image&key=${key.value}&batch_size=${batchSize.value}`)
                     .then(re => re.json())
@@ -45,9 +46,11 @@ export const ImageStorageExportLoop = {
                     for (const node of notAlreadyMutedBlacklist) node.mode = 0;
                     await waitForQueueEnd(await waitForPromptId());
                     loopPreview.value = `current loop: ${i + 1}/${numLoop}`;
+                    app.canvas.setDirty(true);
                     loopIndex.value++;
                 }
                 loopPreview.value = 'Done 😎!';
+                app.canvas.setDirty(true);
             })();
 
         });
