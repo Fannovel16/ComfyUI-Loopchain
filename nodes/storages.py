@@ -33,7 +33,7 @@ class ImageStorageImport:
     
     @classmethod
     def IS_CHANGED():
-        return ''.join(random.choice("abcdefghijklmnopqrstupvxyz") for _ in range(10))
+        return float("nan")
 
 class ImageStorageExportLoop:
     @classmethod
@@ -43,7 +43,6 @@ class ImageStorageExportLoop:
                 "key": ("STRING", {"multiline": False}), 
                 "batch_size": ("INT", {"default": 1, "min": 1}),
                 "loop_idx": ("INT", {"default": 0, "min": 0}),
-                "num_loop": ("INT", {"default": 1, "min": 1}),
             },
             "optional": {
                 "opt_pipeline": ("LOOPCHAIN_PIPELINE", )
@@ -55,7 +54,7 @@ class ImageStorageExportLoop:
     RETURN_TYPES = ("IMAGE", "INT", "INT")
     RETURN_NAMES = ("IMAGE", "LOOP IDX (INT)", "IDX_IN_BATCH (INT)")
 
-    def execute(self, key, batch_size, loop_idx, num_loop, opt_pipeline=None):
+    def execute(self, key, batch_size, loop_idx, opt_pipeline=None):
         key = key.strip()
         assert GLOBAL_IMAGE_STORAGE[key], f"Image storage {key} doesn't exist."
         dataloader = DataLoader(torch.cat(GLOBAL_IMAGE_STORAGE[key], dim=0), batch_size=batch_size)
@@ -63,7 +62,7 @@ class ImageStorageExportLoop:
     
     @classmethod
     def IS_CHANGED():
-        return ''.join(random.choice("abcdefghijklmnopqrstupvxyz") for _ in range(10))
+        return float("nan")
 
 class ImageStorageReset:
     @classmethod
@@ -90,7 +89,7 @@ class ImageStorageReset:
 
     @classmethod
     def IS_CHANGED():
-        return ''.join(random.choice("abcdefghijklmnopqrstupvxyz") for _ in range(10))
+        return float("nan")
 
 
 
@@ -173,7 +172,7 @@ class LatentStorageImport:
     
     @classmethod
     def IS_CHANGED():
-        return ''.join(random.choice("abcdefghijklmnopqrstupvxyz") for _ in range(10))
+        return float("nan")
 
 class LatentStorageExportLoop:
     @classmethod
@@ -182,8 +181,7 @@ class LatentStorageExportLoop:
             "required": { 
                 "key": ("STRING", {"multiline": False}), 
                 "batch_size": ("INT", {"default": 1, "min": 1}),
-                "loop_idx": ("INT", {"default": 0, "min": 0}),
-                "num_loop": ("INT", {"default": 1, "min": 1})
+                "loop_idx": ("INT", {"default": 0, "min": 0})
             },
             "optional": {
                 "opt_pipeline": ("LOOPCHAIN_PIPELINE", )
@@ -195,7 +193,7 @@ class LatentStorageExportLoop:
     RETURN_TYPES = ("LATENT", "INT", "INT")
     RETURN_NAMES = ("LATENT", "LOOP IDX (INT)", "IDX_IN_BATCH (INT)")
 
-    def execute(self, key, batch_size, loop_idx, num_loop, opt_pipeline=None):
+    def execute(self, key, batch_size, loop_idx, opt_pipeline=None):
         key = key.strip()
         assert GLOBAL_LATENT_STORAGE[key], f"Latent storage {key} doesn't exist."
         dataloader = DataLoader(torch.cat(GLOBAL_LATENT_STORAGE[key], dim=0), batch_size=batch_size)
@@ -203,7 +201,7 @@ class LatentStorageExportLoop:
     
     @classmethod
     def IS_CHANGED():
-        return ''.join(random.choice("abcdefghijklmnopqrstupvxyz") for _ in range(10))
+        return float("nan")
 
 class LatentStorageReset:
     @classmethod
@@ -231,7 +229,7 @@ class LatentStorageReset:
 
     @classmethod
     def IS_CHANGED():
-        return ''.join(random.choice("abcdefghijklmnopqrstupvxyz") for _ in range(10))
+        return float("nan")
 
 
 NODE_CLASS_MAPPINGS = {

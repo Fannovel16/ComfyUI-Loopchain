@@ -22,10 +22,10 @@ https://github.com/Fannovel16/ComfyUI-Loopchain/raw/main/demo.mp4
 * ImageStorageImport
 * ImageStorageExport
 * ImageStorageExportLoop
-* ImageStorageImport,
-* ImageStorageExportLoop,
-* ImageStorageReset,
+* ImageStorageImport
+* ImageStorageExportLoop
+* ImageStorageReset
 * FolderToImageStorage (need a folder in `input` instead of an image)
-* LatentStorageImport,
-* LatentStorageExportLoop,
+* LatentStorageImport
+* LatentStorageExportLoop
 * LatentStorageReset
