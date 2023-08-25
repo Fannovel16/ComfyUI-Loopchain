@@ -139,3 +139,21 @@ export function waitForWSEvent(processCb) {
     })
     
 }
+
+export async function waitForPromptId() {
+    return await waitForWSEvent(({ data }) => {
+        if (data instanceof ArrayBuffer) return false;
+        const msg = JSON.parse(data);
+        if (msg.type === "execution_start") return msg.data.prompt_id;
+        return false;
+    });
+}
+
+export async function waitForQueueEnd(promptId) {
+    await waitForWSEvent(({ data }) => {
+        if (data instanceof ArrayBuffer) return false;
+        const msg = JSON.parse(data);
+        if (msg.type === "executing" && msg.data.prompt_id === promptId && msg.data.node === null) return true;
+        return false;
+    });
+}
