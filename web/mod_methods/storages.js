@@ -78,21 +78,25 @@ export const ImageStorageReset = {
 }
 export const LatentStorageReset = {
     whenCreated(node, app) {
-        return (async () => {
-            const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
-            await app.queuePrompt(0);
-            for (const node of notAlreadyMutedBlacklist) node.mode = 0;
-            await waitForQueueEnd(await waitForPromptId());
-        })();
+        node.addWidget('button', `Queue`, 'queue', function () {
+            return (async () => {
+                const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
+                await app.queuePrompt(0);
+                for (const node of notAlreadyMutedBlacklist) node.mode = 0;
+                await waitForQueueEnd(await waitForPromptId());
+            })();
+        });
     }
 }
 export const FolderToImageStorage = {
     whenCreated(node, app) {
-        return (async () => {
-            const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
-            await app.queuePrompt(0);
-            for (const node of notAlreadyMutedBlacklist) node.mode = 0;
-            await waitForQueueEnd(await waitForPromptId());
-        })();
+        node.addWidget('button', `Queue`, 'queue', function () {
+            return (async () => {
+                const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
+                await app.queuePrompt(0);
+                for (const node of notAlreadyMutedBlacklist) node.mode = 0;
+                await waitForQueueEnd(await waitForPromptId());
+            })();
+        });
     }
 }
