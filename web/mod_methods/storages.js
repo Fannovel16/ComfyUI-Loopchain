@@ -42,7 +42,7 @@ export const ImageStorageExportLoop = {
 
                 for (let i = 0; i < numLoop; i++) {
                     const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
-                    await app.queuePrompt(0);
+                    app.queuePrompt(0);
                     for (const node of notAlreadyMutedBlacklist) node.mode = 0;
                     const promptId = await waitForPromptId();
                     await waitForQueueEnd(promptId);
