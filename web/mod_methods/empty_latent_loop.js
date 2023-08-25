@@ -38,6 +38,7 @@ export const EmptyLatentImageLoop = {
                         return false;
                     });
                     loopPreview.value = `current loop: ${i + 1}/${numLoop.value}`;
+                    await new Promise(re => setTimeout(re, 1000));
                     loopIndex.value++;
                 }
                 loopPreview.value = 'Done 😎!';
