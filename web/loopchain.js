@@ -38,6 +38,7 @@ class LoopchainPipeline {
                     if (!output.links?.[0]) continue;
                     const loopNode = getNodeByLink(output.links[0], "output");
                     await findWidgetByName(loopNode, "Queue").callback();
+                    await new Promise(re => setTimeout(re, 1000)); 
                 }
             })();
         });
