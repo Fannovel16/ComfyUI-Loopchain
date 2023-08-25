@@ -24,12 +24,13 @@ export const ImageStorageExportLoop = {
     },
     whenCreated(node, app) {
         const queueBtn = node.addWidget('button', `Queue`, 'queue', function () {
+            const loopIndex = findWidgetByName(node, 'loop_idx');
+            loopIndex.value = 0;
             return (async _ => {
                 const key = findWidgetByName(node, "key");
                 const batchSize = findWidgetByName(node, "batch_size");
                 const loopPreview = findWidgetByName(node, 'loop_preview');
-                const loopIndex = findWidgetByName(node, 'loop_idx');
-                loopIndex.value = 0;
+                
 
                 const { result: numLoop } = await fetch(`/loopchain/dataloader_length?type=image&key=${key.value}&batch_size=${batchSize.value}`)
                     .then(re => re.json())
