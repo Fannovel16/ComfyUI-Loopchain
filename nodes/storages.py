@@ -41,7 +41,7 @@ class ImageStorageExportLoop:
         return {
             "required": {
                 "key": ("STRING", {"multiline": False}), 
-                "batch_size": ("INT", {"default": 1, "min": 1}),
+                "batch_size": ("INT", {"default": 1000, "min": 1}),
                 "loop_idx": ("INT", {"default": 0, "min": 0}),
             },
             "optional": {
@@ -180,7 +180,7 @@ class LatentStorageExportLoop:
         return {
             "required": { 
                 "key": ("STRING", {"multiline": False}), 
-                "batch_size": ("INT", {"default": 1, "min": 1}),
+                "batch_size": ("INT", {"default": 1000, "min": 1}),
                 "loop_idx": ("INT", {"default": 0, "min": 0})
             },
             "optional": {

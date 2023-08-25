@@ -41,6 +41,7 @@ export const EmptyLatentImageLoop = {
                     loopIndex.value++;
                 }
                 loopPreview.value = 'Done 😎!';
+                loopIndex.value = 0;
             })();
 
         });
