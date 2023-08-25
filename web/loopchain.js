@@ -33,7 +33,8 @@ class LoopchainPipeline {
         }
         pipeline.addWidget('button', `Queue`, 'queue', function () {
             return (async _ => {
-                for (const output of pipeline.outputs) {
+                const sortedOutputs = pipeline.outputs.sort((a, b) => a.name.localeCompare(b.name));
+                for (const output of sortedOutputs) {
                     if (!output.links?.[0]) continue;
                     const loopNode = getNodeByLink(output.links[0], "output");
                     await findWidgetByName(loopNode, "Queue").callback();

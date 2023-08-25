@@ -150,10 +150,13 @@ export async function waitForPromptId() {
 }
 
 export async function waitForQueueEnd(promptId) {
-    await waitForWSEvent(({ data }) => {
-        if (data instanceof ArrayBuffer) return false;
-        const msg = JSON.parse(data);
-        if (msg.type === "executing" && msg.data.prompt_id === promptId && msg.data.node === null) return true;
-        return false;
-    });
+    while (true) {
+        const { queue_running, queue_pending } = await fetch("/queue").then(re => re.json());
+        const notFinishedIds = [
+            ...queue_running.map(el => el[1]),
+            ...queue_pending.map(el => el[1])
+        ];
+        if (!notFinishedIds.includes(promptId)) return;
+        await new Promise(re => setTimeout(re, 1000)); 
+    }
 }
