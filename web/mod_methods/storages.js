@@ -42,9 +42,13 @@ export const ImageStorageExportLoop = {
 
                 for (let i = 0; i < numLoop; i++) {
                     const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
-                    app.queuePrompt(0);
-                    for (const node of notAlreadyMutedBlacklist) node.mode = 0;
-                    const promptId = await waitForPromptId();
+                    //Combo like ExportLoop + ImagePreview can be super fast.
+                    const [_, promptId] = await Promise.all([
+                        app.queuePrompt(0).then(_ => {
+                            for (const node of notAlreadyMutedBlacklist) node.mode = 0
+                        }),
+                        waitForPromptId()
+                    ]);
                     await waitForQueueEnd(promptId);
                     loopPreview.value = `current loop: ${i + 1}/${numLoop}`;
                     app.canvas.setDirty(true);
