@@ -43,8 +43,7 @@ export const ImageStorageExportLoop = {
                     const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
                     await app.queuePrompt(0);
                     for (const node of notAlreadyMutedBlacklist) node.mode = 0;
-                    const promptId = await waitForPromptId();
-                    await waitForQueueEnd(promptId);
+                    await waitForQueueEnd(await waitForPromptId());
                     loopPreview.value = `current loop: ${i + 1}/${numLoop}`;
                     loopIndex.value++;
                 }
@@ -72,8 +71,7 @@ export const ImageStorageReset = {
                 const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
                 await app.queuePrompt(0);
                 for (const node of notAlreadyMutedBlacklist) node.mode = 0;
-                const promptId = await waitForPromptId();
-                await waitForQueueEnd(promptId);
+                await waitForQueueEnd(await waitForPromptId());
             })();
         });
     }
@@ -84,8 +82,7 @@ export const LatentStorageReset = {
             const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
             await app.queuePrompt(0);
             for (const node of notAlreadyMutedBlacklist) node.mode = 0;
-            const promptId = await waitForPromptId();
-            await waitForQueueEnd(promptId);
+            await waitForQueueEnd(await waitForPromptId());
         })();
     }
 }
@@ -95,8 +92,7 @@ export const FolderToImageStorage = {
             const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
             await app.queuePrompt(0);
             for (const node of notAlreadyMutedBlacklist) node.mode = 0;
-            const promptId = await waitForPromptId();
-            await waitForQueueEnd(promptId);
+            await waitForQueueEnd(await waitForPromptId());
         })();
     }
 }
