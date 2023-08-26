@@ -1,4 +1,4 @@
-import { DEBUG_STRING, getNodeByLink, enableOnlyRelatedNodes, findWidgetByName, waitForWSEvent } from "../utils.js"
+import { DEBUG_STRING, getNodeByLink, enableOnlyRelatedNodes, findWidgetByName, executeAndWaitForLoopchain } from "../utils.js"
 import * as shared from '../comfy_shared.js'
 
 export const EmptyLatentImageLoop = {
@@ -22,21 +22,7 @@ export const EmptyLatentImageLoop = {
                 const loopIndex = findWidgetByName(this, 'loop_idx');
                 loopIndex.value = 0;
                 for (let i = 0; i < numLoop; i++) {
-                    const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
-                    await app.queuePrompt(0);
-                    for (const node of notAlreadyMutedBlacklist) node.mode = 0;
-                    const promptId = await waitForWSEvent(({ data }) => {
-                        if (data instanceof ArrayBuffer) return false;
-                        const msg = JSON.parse(data);
-                        if (msg.type === "execution_start") return msg.data.prompt_id;
-                        return false;
-                    });
-                    await waitForWSEvent(({ data }) => {
-                        if (data instanceof ArrayBuffer) return false;
-                        const msg = JSON.parse(data);
-                        if (msg.type === "executing" && msg.data.prompt_id === promptId && msg.data.node === null) return true;
-                        return false;
-                    });
+                    await executeAndWaitForLoopchain(app, node);
                     loopPreview.value = `current loop: ${i + 1}/${numLoop.value}`;
                     await new Promise(re => setTimeout(re, 1000));
                     loopIndex.value++;

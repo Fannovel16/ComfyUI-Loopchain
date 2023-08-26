@@ -1,4 +1,4 @@
-import { DEBUG_STRING, getNodeByLink, enableOnlyRelatedNodes, findWidgetByName, waitForPromptId, waitForQueueEnd } from "../utils.js"
+import { DEBUG_STRING, getNodeByLink, enableOnlyRelatedNodes, findWidgetByName, executeAndWaitForLoopchain } from "../utils.js"
 import * as shared from '../comfy_shared.js'
 
 
@@ -41,15 +41,7 @@ export const ImageStorageExportLoop = {
                 }
 
                 for (let i = 0; i < numLoop; i++) {
-                    const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
-                    //Combo like ExportLoop + ImagePreview can be super fast.
-                    const [_, promptId] = await Promise.all([
-                        app.queuePrompt(0).then(_ => {
-                            for (const node of notAlreadyMutedBlacklist) node.mode = 0
-                        }),
-                        waitForPromptId()
-                    ]);
-                    await waitForQueueEnd(promptId);
+                    await executeAndWaitForLoopchain(app, node);
                     loopPreview.value = `current loop: ${i + 1}/${numLoop}`;
                     app.canvas.setDirty(true);
                     loopIndex.value++;
@@ -75,36 +67,21 @@ export const ImageStorageExportLoop = {
 export const ImageStorageReset = {
     whenCreated(node, app) {
         node.addWidget('button', `Queue`, 'queue', function () {
-            return (async () => {
-                const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
-                await app.queuePrompt(0);
-                for (const node of notAlreadyMutedBlacklist) node.mode = 0;
-                await waitForQueueEnd(await waitForPromptId());
-            })();
+            return (async () => await executeAndWaitForLoopchain(app, node))();
         });
     }
 }
 export const LatentStorageReset = {
     whenCreated(node, app) {
         node.addWidget('button', `Queue`, 'queue', function () {
-            return (async () => {
-                const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
-                await app.queuePrompt(0);
-                for (const node of notAlreadyMutedBlacklist) node.mode = 0;
-                await waitForQueueEnd(await waitForPromptId());
-            })();
+            return (async () => await executeAndWaitForLoopchain(app, node))();
         });
     }
 }
 export const FolderToImageStorage = {
     whenCreated(node, app) {
         node.addWidget('button', `Queue`, 'queue', function () {
-            return (async () => {
-                const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(node);
-                await app.queuePrompt(0);
-                for (const node of notAlreadyMutedBlacklist) node.mode = 0;
-                await waitForQueueEnd(await waitForPromptId());
-            })();
+            return (async () => await executeAndWaitForLoopchain(app, node))();
         });
     }
 }

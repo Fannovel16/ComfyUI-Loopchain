@@ -122,10 +122,10 @@ export function enableOnlyRelatedNodes(targetNode) {
 
 export const findWidgetByName = (node, widgetName) => node.widgets.find(w => w.name === widgetName)
 
-export function waitForWSEvent(processCb) {
+/* export function waitForWSEvent(processCb) {
     return new Promise((resolve, reject) => {
         function handleMessage(event) {
-            try { 
+            try {
                 const result = processCb(event);
                 if (result) resolve(result);
                 api.socket.removeEventListener("message", handleMessage);
@@ -137,16 +137,22 @@ export function waitForWSEvent(processCb) {
         }
         api.socket.addEventListener("message", handleMessage);
     })
-    
-}
 
-export async function waitForPromptId() {
-    return await waitForWSEvent(({ data }) => {
-        if (data instanceof ArrayBuffer) return false;
-        const msg = JSON.parse(data);
-        if (msg.type === "execution_start") return msg.data.prompt_id;
-        return false;
-    });
+} */
+
+export function waitForPromptId() {
+    const originalFetch = window.fetch;
+    return new Promise(resolve => {
+        window.fetch = async (...args) => {
+            let [url, config] = args;
+            const response = await originalFetch(url, config);
+            if (url === "/prompt") {
+                response.clone().json().then(data => resolve(data.prompt_id));
+                window.fetch = originalFetch;
+            }
+            return response;
+        };
+    })
 }
 
 export async function waitForQueueEnd(promptId) {
@@ -157,6 +163,15 @@ export async function waitForQueueEnd(promptId) {
             ...queue_pending.map(el => el[1])
         ];
         if (!notFinishedIds.includes(promptId)) return;
-        await new Promise(re => setTimeout(re, 1000)); 
+        await new Promise(re => setTimeout(re, 1000));
     }
+}
+
+export async function executeAndWaitForLoopchain(app, loopnode) {
+    const notAlreadyMutedBlacklist = enableOnlyRelatedNodes(loopnode);
+    const promptIdPromise = waitForPromptId();
+    await app.queuePrompt(0);
+    for (const node of notAlreadyMutedBlacklist) node.mode = 0;
+    const promptId = await promptIdPromise;
+    await waitForQueueEnd(promptId);
 }

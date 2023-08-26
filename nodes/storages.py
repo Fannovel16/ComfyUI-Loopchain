@@ -33,7 +33,7 @@ class ImageStorageImport:
     
     @classmethod
     def IS_CHANGED():
-        return ''.join(random.choice("abcdefghijklmnopqrstupvxyz") for _ in range(10))
+        return float("nan")
 
 class ImageStorageExportLoop:
     @classmethod
@@ -62,7 +62,7 @@ class ImageStorageExportLoop:
     
     @classmethod
     def IS_CHANGED():
-        return ''.join(random.choice("abcdefghijklmnopqrstupvxyz") for _ in range(10))
+        return float("nan")
 
 class ImageStorageReset:
     @classmethod
@@ -89,7 +89,7 @@ class ImageStorageReset:
 
     @classmethod
     def IS_CHANGED():
-        return ''.join(random.choice("abcdefghijklmnopqrstupvxyz") for _ in range(10))
+        return float("nan")
 
 
 
@@ -172,7 +172,7 @@ class LatentStorageImport:
     
     @classmethod
     def IS_CHANGED():
-        return ''.join(random.choice("abcdefghijklmnopqrstupvxyz") for _ in range(10))
+        return float("nan")
 
 class LatentStorageExportLoop:
     @classmethod
@@ -201,7 +201,7 @@ class LatentStorageExportLoop:
     
     @classmethod
     def IS_CHANGED():
-        return ''.join(random.choice("abcdefghijklmnopqrstupvxyz") for _ in range(10))
+        return float("nan")
 
 class LatentStorageReset:
     @classmethod
@@ -229,7 +229,7 @@ class LatentStorageReset:
 
     @classmethod
     def IS_CHANGED():
-        return ''.join(random.choice("abcdefghijklmnopqrstupvxyz") for _ in range(10))
+        return float("nan")
 
 
 NODE_CLASS_MAPPINGS = {
